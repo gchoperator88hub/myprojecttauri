@@ -22,11 +22,11 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      # ✅ Install ImageMagick (for real ICO generation)
+      # Install ImageMagick (for icon generation)
       - name: Install ImageMagick
         run: choco install imagemagick -y
 
-      # ✅ Create REAL valid ICO file
+      # Create valid icon.ico
       - name: Create valid icon.ico
         shell: powershell
         run: |
@@ -34,26 +34,26 @@ jobs:
             New-Item -ItemType Directory -Path "src-tauri\icons"
           }
 
-          # create simple PNG first
           magick convert -size 256x256 xc:dodgerblue -fill white -gravity center -pointsize 72 -annotate 0 "APP" src-tauri\icons\icon.png
 
-          # convert to REAL ico
           magick convert src-tauri\icons\icon.png -define icon:auto-resize=256,128,64,48,32,16 src-tauri\icons\icon.ico
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # IMPORTANT: install Tauri CLI explicitly (fixes npm exec issues)
+      # Install Tauri CLI
       - name: Install Tauri CLI
         run: npm install -g @tauri-apps/cli
 
+      # Build app
       - name: Build Tauri Windows App (.exe)
         run: tauri build
 
+      # Upload artifacts (FIXED indentation!)
       - name: Upload installer
-  uses: actions/upload-artifact@v4
-  with:
-    name: windows-installer
-    path: |
-      src-tauri/target/release/bundle/**/*
-      src-tauri/target/release/*.exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            src-tauri/target/release/bundle/**
+            src-tauri/target/release/*.exe
