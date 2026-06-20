@@ -51,7 +51,9 @@ jobs:
         run: tauri build
 
       - name: Upload installer
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-installer
-          path: src-tauri/target/release/bundle/
+  uses: actions/upload-artifact@v4
+  with:
+    name: windows-installer
+    path: |
+      src-tauri/target/release/bundle/**/*
+      src-tauri/target/release/*.exe
