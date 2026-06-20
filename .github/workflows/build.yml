@@ -9,8 +9,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -23,19 +22,13 @@ jobs:
       - name: Build frontend (creates dist/)
         run: npm run build
 
-      - name: Install Rust toolchain
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Tauri CLI
-        run: npm install -D @tauri-apps/cli@latest
-
-      - name: Cache Rust build
-        uses: swatinem/rust-cache@v2
-
       - name: Build Tauri Windows App (.exe)
-        run: npx tauri build
+        run: npx @tauri-apps/cli tauri build
 
-      - name: Upload Windows installer
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
