@@ -25,8 +25,11 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Tauri CLI
+        run: npm install -D @tauri-apps/cli
+
       - name: Build Tauri Windows App (.exe)
-        run: npm exec tauri build
+        run: npx tauri build
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
