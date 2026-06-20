@@ -22,37 +22,33 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      # 🔥 FIX: generate valid icon (NO external tools, fully reliable)
+      # ✅ Install ImageMagick (for real ICO generation)
+      - name: Install ImageMagick
+        run: choco install imagemagick -y
+
+      # ✅ Create REAL valid ICO file
       - name: Create valid icon.ico
         shell: powershell
         run: |
-          Add-Type -AssemblyName System.Drawing
-
-          $bmp = New-Object System.Drawing.Bitmap 256,256
-          $g = [System.Drawing.Graphics]::FromImage($bmp)
-
-          $g.Clear([System.Drawing.Color]::DodgerBlue)
-          $font = New-Object System.Drawing.Font("Arial", 72)
-          $brush = [System.Drawing.Brushes]::White
-
-          $g.DrawString("APP", $font, $brush, 30, 70)
-
           if (!(Test-Path "src-tauri\icons")) {
             New-Item -ItemType Directory -Path "src-tauri\icons"
           }
 
-          $bmp.Save("src-tauri\icons\icon.png", [System.Drawing.Imaging.ImageFormat]::Png)
-          $bmp.Save("src-tauri\icons\icon.ico", [System.Drawing.Imaging.ImageFormat]::Png)
+          # create simple PNG first
+          magick convert -size 256x256 xc:dodgerblue -fill white -gravity center -pointsize 72 -annotate 0 "APP" src-tauri\icons\icon.png
 
-          $g.Dispose()
-          $bmp.Dispose()
+          # convert to REAL ico
+          magick convert src-tauri\icons\icon.png -define icon:auto-resize=256,128,64,48,32,16 src-tauri\icons\icon.ico
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # 🔥 FIX: correct Tauri v2 CLI usage
+      # IMPORTANT: install Tauri CLI explicitly (fixes npm exec issues)
+      - name: Install Tauri CLI
+        run: npm install -g @tauri-apps/cli
+
       - name: Build Tauri Windows App (.exe)
-        run: npx @tauri-apps/cli@latest tauri build
+        run: tauri build
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
