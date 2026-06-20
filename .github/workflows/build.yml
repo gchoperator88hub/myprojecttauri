@@ -9,51 +9,34 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install Node dependencies
+      - name: Install frontend dependencies
         run: npm install
 
       - name: Build frontend
         run: npm run build
 
-      # Install ImageMagick (for icon generation)
-      - name: Install ImageMagick
-        run: choco install imagemagick -y
-
-      # Create valid icon.ico
-      - name: Create valid icon.ico
-        shell: powershell
-        run: |
-          if (!(Test-Path "src-tauri\icons")) {
-            New-Item -ItemType Directory -Path "src-tauri\icons"
-          }
-
-          magick convert -size 256x256 xc:dodgerblue -fill white -gravity center -pointsize 72 -annotate 0 "APP" src-tauri\icons\icon.png
-
-          magick convert src-tauri\icons\icon.png -define icon:auto-resize=256,128,64,48,32,16 src-tauri\icons\icon.ico
-
-      - name: Install Rust
+      - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      # Install Tauri CLI
       - name: Install Tauri CLI
         run: npm install -g @tauri-apps/cli
 
-      # Build app
-      - name: Build Tauri Windows App (.exe)
-        run: tauri build
+      # IMPORTANT: run via npx to ensure correct binary resolution
+      - name: Build Tauri App
+        run: npx tauri build --verbose
 
-      # Upload artifacts (FIXED indentation!)
-      - name: Upload installer
+      - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
           path: |
-            src-tauri/target/release/bundle/**
-            src-tauri/target/release/*.exe
+            src-tauri/target/release/bundle/nsis/**/*.exe
+            src-tauri/target/release/bundle/**/*.msi
