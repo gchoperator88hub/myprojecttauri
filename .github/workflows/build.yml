@@ -26,7 +26,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build Tauri Windows App (.exe)
-        run: npx @tauri-apps/cli tauri build
+        run: npm exec tauri build
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
