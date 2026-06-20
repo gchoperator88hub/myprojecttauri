@@ -9,27 +9,18 @@ const publicDir = path.join(root, "public");
 await rm(distDir, { recursive: true, force: true });
 await mkdir(path.join(distDir, "assets"), { recursive: true });
 
-// Copy static HTML (will reference ./assets/main.js)
-await cp(path.join(publicDir, "index.html"), path.join(distDir, "index.html"));
+// copy HTML
+await cp(
+  path.join(publicDir, "index.html"),
+  path.join(distDir, "index.html")
+);
 
+// build JS
 await build({
   entryPoints: [path.join(root, "src", "main.js")],
   bundle: true,
   minify: true,
-  sourcemap: true,
   format: "esm",
   target: ["es2019"],
-  outdir: path.join(distDir, "assets"),
-  entryNames: "main",
+  outfile: path.join(distDir, "assets", "main.js"),
 });
-
-await build({
-  entryPoints: [path.join(root, "src", "styles.css")],
-  bundle: true,
-  minify: true,
-  sourcemap: true,
-  outdir: path.join(distDir, "assets"),
-  entryNames: "styles",
-  loader: { ".css": "css" },
-});
-

@@ -1,0 +1,19 @@
+{
+  "build": {
+    "beforeBuildCommand": "npm run build",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "MyTauriApp",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "windows": [
+      {
+        "title": "My App",
+        "width": 900,
+        "height": 600
+      }
+    ]
+  }
+}

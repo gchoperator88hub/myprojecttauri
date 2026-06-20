@@ -1,4 +1,4 @@
-name: Build Windows App
+name: Build Tauri Windows App
 
 on:
   push:
@@ -9,18 +9,34 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - run: npm install
+      - name: Install Node dependencies
+        run: npm install
 
-      - run: npm run build
+      - name: Build frontend (creates dist/)
+        run: npm run build
 
-      - name: Upload build result
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Tauri CLI
+        run: npm install -D @tauri-apps/cli@latest
+
+      - name: Cache Rust build
+        uses: swatinem/rust-cache@v2
+
+      - name: Build Tauri Windows App (.exe)
+        run: npx tauri build
+
+      - name: Upload Windows installer
         uses: actions/upload-artifact@v4
         with:
-          name: web-build
-          path: dist/
+          name: windows-installer
+          path: src-tauri/target/release/bundle/
