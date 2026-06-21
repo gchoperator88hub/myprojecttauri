@@ -24,7 +24,7 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Verify dist output (CRITICAL)
+      - name: Verify dist
         run: dir dist
 
       - name: Setup Rust

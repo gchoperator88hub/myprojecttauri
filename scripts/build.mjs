@@ -6,7 +6,6 @@ const root = process.cwd();
 const distDir = path.join(root, "dist");
 const publicDir = path.join(root, "public");
 
-// clean dist
 await rm(distDir, { recursive: true, force: true });
 await mkdir(path.join(distDir, "assets"), { recursive: true });
 
@@ -16,15 +15,12 @@ await copyFile(
   path.join(distDir, "index.html")
 );
 
-// build JS bundle
+// build JS
 await build({
   entryPoints: [path.join(root, "src", "main.js")],
   bundle: true,
   minify: true,
   format: "esm",
   target: ["es2019"],
-  outfile: path.join(distDir, "assets", "main.js"),
-
-  // 🔥 IMPORTANT FIX: ensures correct relative asset resolution
-  publicPath: "./assets",
+  outfile: path.join(distDir, "assets", "main.js")
 });
