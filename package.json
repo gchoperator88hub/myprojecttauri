@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npx serve public -l 7860",
     "build": "node ./scripts/build.mjs",
+    "build:frontend": "node ./scripts/build.mjs",
     "start": "npx serve dist -l 7860"
   },
   "devDependencies": {

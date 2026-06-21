@@ -16,12 +16,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      - name: Install frontend dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build frontend
         run: npm run build
+
+      - name: Verify dist output (CRITICAL)
+        run: dir dist
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -29,11 +33,10 @@ jobs:
       - name: Install Tauri CLI
         run: npm install -g @tauri-apps/cli
 
-      # IMPORTANT: run via npx to ensure correct binary resolution
       - name: Build Tauri App
         run: npx tauri build --verbose
 
-      - name: Upload Windows installer
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
