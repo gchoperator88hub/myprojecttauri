@@ -6,7 +6,7 @@
 
   "build": {
     "beforeBuildCommand": "npm run build",
-    "frontendDist": "dist"
+    "frontendDist": "../dist"
   },
 
   "app": {
