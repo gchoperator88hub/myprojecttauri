@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "../bindings/capabilities.json",
   "identifier": "default",
   "description": "Allow all core features for frontend",
