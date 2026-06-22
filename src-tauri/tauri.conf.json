@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://tauri.app",
   "productName": "MyTauriApp",
   "version": "0.1.0",
