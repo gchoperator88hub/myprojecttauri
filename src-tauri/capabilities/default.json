@@ -1,13 +1,10 @@
 {
   "$schema": "../bindings/capabilities.json",
   "identifier": "default",
-  "description": "Allow all core features for frontend",
+  "description": "Main application capability",
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "core:app:allow-version",
-    "core:event:allow-any",
-    "core:window:allow-all",
-    "core:webview:allow-all"
+    "core:app:allow-version"
   ]
 }
